@@ -1,5 +1,7 @@
 public with sharing class ContactTriggerHandler extends TriggerHandler {
 
+    private static Boolean UPDATING_SHARES = false;
+
     private final List<Contact> newList;
     private final List<Contact> oldList;
     private final Map<Id, Contact> newMap;
@@ -20,26 +22,28 @@ public with sharing class ContactTriggerHandler extends TriggerHandler {
     }
 
     public override void afterInsert() {
-        updateContactsShare(Filter.fieldChanged(newMap, oldMap, Account.Total__c));
+        updateContactsShare(newList);
     }
 
     public override void afterDelete() {
-
+        updateContactsShare(oldList);
     }
 
     public override void afterUndelete() {
-
+        updateContactsShare(newList);
     }
 
-    private static Map<Id, List<Contact>> groupByAccountId(List<Contact> contacts) {
-        Map<Id, List<Contact>> contactsByAccountId = new Map<Id, List<Contact>>();
+    private static void updateContactsShare(List<Contact> contacts) {
+        if (UPDATING_SHARES) return;
+        if (contacts.isEmpty()) return;
+
+        UPDATING_SHARES = true;
+        Set<Id> accountIds = new Set<Id>();
         for (Contact c : contacts) {
-            List<Contact> contactsForAccountId = contactsByAccountId.get(c.AccountId);
-            if (contactsForAccountId == null) {
-                contactsForAccountId = new List<Contact>();
-                contactsByAccountId.put(c.AccountId, contactsForAccountId);
-            }
-            contactsForAccountId.add(c);
+            accountIds.add(c.AccountId);
         }
+
+        AccountsService.updateContactsShare(accountIds);
+        UPDATING_SHARES = false;
     }
 }

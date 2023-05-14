@@ -21,10 +21,6 @@ public with sharing class AccountTriggerHandler extends TriggerHandler {
         new AccountTriggerHandler(op, newList, oldList, newMap, oldMap).handle();
     }
 
-//    public override void afterInsert() {
-//        updateContactsShare(Filter.fieldNotNull(newList, Account.Total__c));
-//    }
-
     public override void afterUpdate() {
         updateContactsShare(Filter.fieldChanged(newMap, oldMap, Account.Total__c));
     }

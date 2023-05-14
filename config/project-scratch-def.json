@@ -1,6 +1,7 @@
 {
   "orgName": "esercizio-trigger-prodigi",
   "edition": "Developer",
+  "language": "en_US",
   "features": ["EnableSetPasswordInApi"],
   "settings": {
     "lightningExperienceSettings": {

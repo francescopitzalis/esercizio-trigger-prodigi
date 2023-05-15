@@ -1,0 +1,1 @@
+JsonDataLoader.loadData('sampleAccounts', 'sampleContacts');

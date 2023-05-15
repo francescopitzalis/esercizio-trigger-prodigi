@@ -1,0 +1,30 @@
+<apex:page controller="TotalAndSharesController">
+    <apex:form>
+        <apex:pageBlock title="Total and Shares">
+            <apex:pageBlockButtons>
+                <apex:commandButton value="Save Account Totals" action="{!save}"/>
+                <apex:commandButton value="Previous" action="{!previous}" disabled="{!previousDisabled}"/>
+                <apex:commandButton value="Next" action="{!next}" disabled="{!nextDisabled}"/>
+            </apex:pageBlockButtons>
+            <apex:repeat value="{!accounts}" var="a">
+                <apex:pageBlockSection title="{!a.Name}" columns="2">
+                    <apex:pageBlockSectionItem>
+                        <apex:outputLabel value="Account:"/>
+                        <apex:outputLink value="{!URLFOR($Action.Account.View, a.Id)}">{!a.Name}</apex:outputLink>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputField value="{!a.Total__c}"/>
+                </apex:pageBlockSection>
+                <apex:variable var="rowcount" value="{! 1}" />
+                <apex:pageBlockTable value="{!a.Contacts}" var="c">
+                    <apex:column>
+                        {!rowcount} <apex:variable var="rowcount" value="{!rowcount+1}" />
+                    </apex:column>
+                    <apex:column headerValue="Nome Contatto">
+                        <apex:outputLink value="{!URLFOR($Action.Contact.View, c.Id)}">{!c.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column value="{!c.Share__c}"/>
+                </apex:pageBlockTable>
+            </apex:repeat>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
